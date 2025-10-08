@@ -6,6 +6,8 @@ module.exports = function (grunt) {
     
     require('load-grunt-tasks')(grunt);
 
+	const isWin = process.platform === 'win32';
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -108,7 +110,7 @@ module.exports = function (grunt) {
                 options: {
                     stdout: true
                 },
-                command: 'create-package_Grunt.sh'
+                command: './create_packages_Grunt.sh'
             }
         }
     });
@@ -124,4 +126,13 @@ module.exports = function (grunt) {
     
     // review group task
     grunt.registerTask('review', ['clean:release', 'copy:release']);
+	grunt.registerTask('package', isWin ? ['shell:ps'] : ['shell:sh']);
+	grunt.registerTask('release', [
+		'jshint',
+		'clean:release',
+		'sass',
+		'copy:release',
+		'package'
+	]);
+
 };
